@@ -1,5 +1,6 @@
 import { BaseModelEntity } from 'src/common/entities/base-model.entity';
-import { Column, Entity } from 'typeorm';
+import { OtpToken } from 'src/otp-token/entities/otp-token.entity';
+import { Column, Entity, OneToMany } from 'typeorm';
 
 @Entity()
 export class Planner extends BaseModelEntity {
@@ -11,6 +12,12 @@ export class Planner extends BaseModelEntity {
 
   @Column()
   password: string;
+
+  @Column()
+  hasActivatedEmail: boolean;
+
+  @OneToMany(() => OtpToken, (token) => token.user)
+  otpTokens: OtpToken[];
 
   //   TO-DO:Add Ticket relation
   // TO-DO:Add event relation
