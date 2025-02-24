@@ -4,11 +4,11 @@ export class CreateUserDto {
   @IsEmail()
   email: string;
 
-  @MinLength(6)
-  firstname: string;
+  @MinLength(5)
+  firstName: string;
 
-  @MinLength(6)
-  lastname: string;
+  @MinLength(5)
+  lastName: string;
 
   @MinLength(7)
   password: string;

@@ -3,7 +3,7 @@ import { PlannerPresentationService } from '../presentation-services.ts/planner.
 import { CreatePlannerDto } from '../dtos/request/create-planner.dto';
 
 @Controller('planner')
-export class PlannerController {
+export class PlannerSignUpController {
   constructor(private plannerService: PlannerPresentationService) {}
 
   @Post('/signup')

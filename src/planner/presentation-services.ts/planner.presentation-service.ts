@@ -13,8 +13,8 @@ export class PlannerPresentationService {
   ) {}
   public db = this.repo;
 
-  async signUp(CreatePlannerDto: CreatePlannerDto): Promise<Planner> {
-    const { email, name, password } = CreatePlannerDto;
+  async signUp(data: CreatePlannerDto): Promise<Planner> {
+    const { email, name, password } = data;
     const existingUser = await this.repo.findOne({
       where: { email },
     });
