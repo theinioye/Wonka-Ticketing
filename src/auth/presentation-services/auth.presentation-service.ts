@@ -6,7 +6,12 @@ import { UserSignInDto } from '../dto/user-sign-in.dto';
 // import { comparehash } from 'src/common/utils';
 import { JwtService } from '@nestjs/jwt';
 import { User } from 'src/user/entities/user.entity';
-import { AuthSignInResponse } from '../dto/auth-response.dto';
+import {
+  PlannerAuthSignInResponse,
+  UserAuthSignInResponse,
+} from '../dto/auth-response.dto';
+import { PlannerSignInDto } from '../dto/planner-sign-in.dto';
+import { Planner } from 'src/planner/entities/planner.entity';
 
 @Injectable()
 export class AuthPresentationService {
@@ -16,29 +21,73 @@ export class AuthPresentationService {
     private tokenService: OtpTokenPresentationService,
     private jwtService: JwtService,
   ) {}
+
   async userlogIn(data: UserSignInDto) {
     const { email, password } = data;
-    const existingUser = await this.userService.db.findOne({
+    const user = await this.userService.db.findOne({
       where: {
         email,
       },
       select: ['id', 'firstName', 'lastName', 'password', 'email'],
     });
-    if (!existingUser) {
+    if (!user) {
       throw new BadRequestException('Invalid credentials');
     }
-    const passwordMatch = await existingUser.verifyPassword(password);
+    const passwordMatch = await user.verifyPassword(password);
 
     if (!passwordMatch) {
       throw new BadRequestException('Invalid credentials');
     }
-    await this.userService.db.update(existingUser.id, {
+    await this.userService.db.update(user.id, {
       lastLogInDate: new Date(),
     });
 
-    return this.generateToken(existingUser);
+    return this.generateToken(user);
   }
-  async generateToken(user: User): Promise<AuthSignInResponse> {
+
+  async plannerLogIn(data: PlannerSignInDto) {
+    const { email, password } = data;
+    const planner = await this.plannerService.db.findOne({
+      where: {
+        email,
+      },
+      select: ['id', 'name', 'password', 'email'],
+    });
+    if (!planner) {
+      throw new BadRequestException('Invalid credentials');
+    }
+    const passwordMatch = await planner.verifyPassword(password);
+
+    if (!passwordMatch) {
+      throw new BadRequestException('Invalid credentials');
+    }
+
+    await this.plannerService.db.update(planner.id, {
+      lastLogInDate: new Date(),
+    });
+    return this.generatePlannerToken(planner);
+  }
+  async generatePlannerToken(
+    planner: Planner,
+  ): Promise<PlannerAuthSignInResponse> {
+    const payload = {
+      sub: planner.id,
+      email: planner.name,
+    };
+
+    return {
+      user: {
+        id: planner.id,
+        email: planner.email,
+        lastLoginDate: planner.lastLogInDate,
+        // profileImageUrl: user.profileImageUrl,
+        name: planner.name,
+      },
+      token: await this.#getTokens(payload),
+    };
+  }
+
+  async generateToken(user: User): Promise<UserAuthSignInResponse> {
     const payload = {
       sub: user.id,
       email: user.firstName,
