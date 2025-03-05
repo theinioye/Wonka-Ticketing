@@ -1,6 +1,6 @@
-import { BaseModelEntity } from 'src/common/entities/base-model.entity';
-import { Planner } from 'src/planner/entities/planner.entity';
-import { User } from 'src/user/entities/user.entity';
+import { BaseModelEntity } from '../../common/entities/base-model.entity';
+import { Planner } from '../../planner/entities/planner.entity';
+import { User } from '../../user/entities/user.entity';
 import { Column, Entity, ManyToOne } from 'typeorm';
 
 export enum OtpTokenType {

@@ -1,6 +1,6 @@
-import { BaseModelEntity } from 'src/common/entities/base-model.entity';
-import { compareHash } from 'src/common/utils';
-import { OtpToken } from 'src/otp-token/entities/otp-token.entity';
+import { BaseModelEntity } from '../../common/entities/base-model.entity';
+import { compareHash } from '../../common/utils';
+import { OtpToken } from '../../otp-token/entities/otp-token.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
 
 @Entity()
@@ -14,7 +14,10 @@ export class Planner extends BaseModelEntity {
   @Column()
   password: string;
 
-  @Column()
+  @Column({ nullable: true, default: null })
+  profileImageUrl: string;
+
+  @Column({ nullable: true, default: null })
   hasActivatedEmail: boolean;
   @Column()
   lastLogInDate: Date;

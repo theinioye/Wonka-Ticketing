@@ -67,6 +67,7 @@ export class AuthPresentationService {
     });
     return this.generatePlannerToken(planner);
   }
+
   async generatePlannerToken(
     planner: Planner,
   ): Promise<PlannerAuthSignInResponse> {
@@ -80,7 +81,7 @@ export class AuthPresentationService {
         id: planner.id,
         email: planner.email,
         lastLoginDate: planner.lastLogInDate,
-        // profileImageUrl: user.profileImageUrl,
+        profileImageUrl: planner.profileImageUrl,
         name: planner.name,
       },
       token: await this.#getTokens(payload),
@@ -98,7 +99,7 @@ export class AuthPresentationService {
         id: user.id,
         email: user.email,
         lastLoginDate: user.lastLogInDate,
-        // profileImageUrl: user.profileImageUrl,
+        profileImageUrl: user.profileImageUrl,
         firstName: user.firstName,
         lastName: user.lastName,
       },
