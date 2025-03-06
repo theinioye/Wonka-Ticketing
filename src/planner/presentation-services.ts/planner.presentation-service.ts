@@ -1,6 +1,6 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { hashstring } from 'src/common/utils';
+import { hashstring } from '@/common/utils/utils';
 import { Repository } from 'typeorm';
 import { CreatePlannerDto } from '../dtos/request/create-planner.dto';
 import { Planner } from '../entities/planner.entity';

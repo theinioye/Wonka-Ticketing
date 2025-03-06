@@ -1,5 +1,5 @@
 import { BaseModelEntity } from '../../common/entities/base-model.entity';
-import { compareHash } from '../../common/utils';
+import { compareHash } from '../../common/utils/utils';
 import { OtpToken } from '../../otp-token/entities/otp-token.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
 

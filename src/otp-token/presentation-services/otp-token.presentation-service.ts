@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { OtpToken } from '../entities/otp-token.entity';
@@ -17,6 +17,7 @@ export class OtpTokenPresentationService {
   constructor(
     @InjectRepository(OtpToken)
     private repo: Repository<OtpToken>,
+    private readonly logger = new Logger(OtpTokenPresentationService.name),
   ) {}
 
   generateOTP(): string {
@@ -40,6 +41,6 @@ export class OtpTokenPresentationService {
 
   async expireToken(token: OtpToken): Promise<void> {
     await this.repo.update(token.id, { hasExpired: true });
-    // this.logger.log('Token has been set to expired');
+    this.logger.log('Token has been set to expired');
   }
 }
