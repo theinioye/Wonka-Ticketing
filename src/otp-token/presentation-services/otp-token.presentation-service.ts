@@ -2,6 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { OtpToken } from '../entities/otp-token.entity';
+import { Planner } from '@/planner/entities/planner.entity';
+import { User } from '@/user/entities/user.entity';
 // import { User } from 'src/user/entities/user.entity';
 // import { Planner } from 'src/planner/entities/planner.entity';
 
@@ -22,22 +24,22 @@ export class OtpTokenPresentationService {
     return otp.toString();
   }
 
-  // async createOtpToken(type: OtpTokenType) {
-  //   const now = Date.now();
-  //   const validityPeriod = 3600 * 1000;
-  //   const expiresAt = new Date(now + validityPeriod);
-  //   const token = this.generateOTP();
+  async createOtpToken(type: OtpTokenType, user: User | Planner) {
+    const now = Date.now();
+    const validityPeriod = 3600 * 1000;
+    const expiresAt = new Date(now + validityPeriod);
+    const token = this.generateOTP();
 
-  //   return this.repo.save({
-  //     type,
-  //     token,
-  //     expiresAt,
-  //     user,
-  //   });
-  // }
+    return this.repo.save({
+      type,
+      token,
+      expiresAt,
+      user,
+    });
+  }
 
-  // async expireToken(token: OtpToken): Promise<void> {
-  //   await this.repo.update(token.id, { hasExpired: true });
-  //   this.logger.log('Token has been set to expired');
-  // }
+  async expireToken(token: OtpToken): Promise<void> {
+    await this.repo.update(token.id, { hasExpired: true });
+    // this.logger.log('Token has been set to expired');
+  }
 }

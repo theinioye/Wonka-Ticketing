@@ -22,7 +22,7 @@ export class AuthPresentationService {
     private jwtService: JwtService,
   ) {}
 
-  async userlogIn(data: UserSignInDto) {
+  async userLogIn(data: UserSignInDto) {
     const { email, password } = data;
     const user = await this.userService.db.findOne({
       where: {

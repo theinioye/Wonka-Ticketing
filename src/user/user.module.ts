@@ -8,6 +8,6 @@ import { UserPresentationService } from './presentation-services/user.presentati
   imports: [TypeOrmModule.forFeature([User])],
   controllers: [UserSignUpController],
   providers: [UserPresentationService],
-  exports: [],
+  exports: [UserPresentationService],
 })
 export class UserModule {}

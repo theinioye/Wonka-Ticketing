@@ -19,7 +19,7 @@ export class Planner extends BaseModelEntity {
 
   @Column({ nullable: true, default: null })
   hasActivatedEmail: boolean;
-  @Column()
+  @Column({ nullable: true, default: null })
   lastLogInDate: Date;
 
   @OneToMany(() => OtpToken, (token) => token.user)

@@ -11,7 +11,7 @@ export class User extends BaseModelEntity {
   @Column()
   lastName: string;
 
-  @Column()
+  @Column({ nullable: true, default: null })
   lastLogInDate: Date;
 
   @Column({ nullable: true, default: null })
