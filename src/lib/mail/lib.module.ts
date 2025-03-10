@@ -22,7 +22,7 @@ import { MailService } from './mail-service';
           from: configService.get('DEFAULT_EMAIL_FROM'),
         },
         template: {
-          dir: join(__dirname, 'mail/templates'),
+          dir: join(__dirname, 'templates'),
           adapter: new HandlebarsAdapter(),
           options: {
             strict: true,

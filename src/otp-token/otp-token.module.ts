@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { OtpTokenPresentationService } from './presentation-services/otp-token.presentation-service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { OtpToken } from './entities/otp-token.entity';
@@ -7,7 +7,11 @@ import { UserModule } from '@/user/user.module';
 import { PlannerModule } from '@/planner/planner.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([OtpToken]), UserModule, PlannerModule],
+  imports: [
+    TypeOrmModule.forFeature([OtpToken]),
+    forwardRef(() => UserModule),
+    forwardRef(() => PlannerModule),
+  ],
   providers: [OtpTokenPresentationService],
   controllers: [TestOTPController],
   exports: [OtpTokenPresentationService],
