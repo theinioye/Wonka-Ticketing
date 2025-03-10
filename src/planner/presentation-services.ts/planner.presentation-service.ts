@@ -1,6 +1,6 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { hashstring } from 'src/common/utils';
+import { hashstring } from '@/common/utils/utils';
 import { Repository } from 'typeorm';
 import { CreatePlannerDto } from '../dtos/request/create-planner.dto';
 import { Planner } from '../entities/planner.entity';
@@ -13,8 +13,8 @@ export class PlannerPresentationService {
   ) {}
   public db = this.repo;
 
-  async signUp(CreatePlannerDto: CreatePlannerDto): Promise<Planner> {
-    const { email, name, password } = CreatePlannerDto;
+  async signUp(data: CreatePlannerDto): Promise<Planner> {
+    const { email, name, password } = data;
     const existingUser = await this.repo.findOne({
       where: { email },
     });

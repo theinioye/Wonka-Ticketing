@@ -7,7 +7,7 @@ export async function hashstring(string: string) {
   return hash;
 }
 
-export async function comparehash(plainstring: string, hash: string) {
+export async function compareHash(plainstring: string, hash: string) {
   const isMatch = await bcrypt.compare(plainstring, hash);
 
   return isMatch;

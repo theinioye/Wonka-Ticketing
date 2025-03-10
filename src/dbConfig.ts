@@ -8,7 +8,9 @@ export const pgconfig: PostgresConnectionOptions = {
   password: process.env.DB_PASSWORD || 'postgres',
   database: process.env.DB_NAME || 'wonkadb',
   entities: [
-    /* your entities here */
+    'dist/**/*.entity{.ts,.js}',
+    'dist/**/entities/**/*.entity{.ts,.js}',
   ],
+
   synchronize: true,
 };
