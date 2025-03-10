@@ -21,7 +21,7 @@ export class TestOTPController extends BaseService {
   @Post('testotp')
   async test(@Body() input: otptest) {
     const email = input.email;
-    const user = await this.plannerService.db.findOneBy({ email });
+    const user = await this.userService.db.findOneBy({ email });
     this.logger.log('>>>>>>>>>>>>>>>>>>', { user });
     const type = OtpTokenType.EMAIL;
     const otp = await this.otpService.createOtpToken(type, user);

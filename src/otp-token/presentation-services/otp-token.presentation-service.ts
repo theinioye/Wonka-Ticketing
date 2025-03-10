@@ -1,5 +1,5 @@
 import { BaseService } from '@/common/service/base.service';
-import { Planner } from '@/planner/entities/planner.entity';
+import { User } from '@/user/entities/user.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -26,20 +26,16 @@ export class OtpTokenPresentationService extends BaseService {
     return otp.toString();
   }
 
-  async createOtpToken(type: OtpTokenType, user: Planner) {
+  async createOtpToken(type: OtpTokenType, user: User) {
+    const otpToken = new OtpToken();
     const now = Date.now();
     const validityPeriod = 3600 * 1000;
-    const expiresAt = new Date(now + validityPeriod);
-    const token = this.generateOTP();
+    otpToken.expiresAt = new Date(now + validityPeriod);
+    otpToken.token = this.generateOTP();
+    otpToken.user = user;
+    otpToken.type = type;
 
-    const otp = await this.repo.create({
-      type,
-      token,
-      expiresAt,
-      user,
-    });
-
-    return await this.repo.save(otp);
+    return await this.repo.save(otpToken);
   }
 
   async expireToken(token: OtpToken): Promise<void> {

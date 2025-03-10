@@ -24,13 +24,11 @@ export class OtpToken extends BaseModelEntity {
 
   @ManyToOne(() => User, (user) => user.otpTokens, {
     onDelete: 'CASCADE',
-    nullable: true,
   })
   user: User;
 
   @ManyToOne(() => Planner, (planner) => planner.otpTokens, {
     onDelete: 'CASCADE',
-    nullable: true,
   })
   planner: Planner;
 
