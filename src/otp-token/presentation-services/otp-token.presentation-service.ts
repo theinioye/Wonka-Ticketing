@@ -1,9 +1,10 @@
-import { Injectable, Logger } from '@nestjs/common';
+import { BaseService } from '@/common/service/base.service';
+import { Planner } from '@/planner/entities/planner.entity';
+import { User } from '@/user/entities/user.entity';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { OtpToken } from '../entities/otp-token.entity';
-import { Planner } from '@/planner/entities/planner.entity';
-import { User } from '@/user/entities/user.entity';
 // import { User } from 'src/user/entities/user.entity';
 // import { Planner } from 'src/planner/entities/planner.entity';
 
@@ -13,12 +14,13 @@ export enum OtpTokenType {
 }
 
 @Injectable()
-export class OtpTokenPresentationService {
+export class OtpTokenPresentationService extends BaseService {
   constructor(
     @InjectRepository(OtpToken)
     private repo: Repository<OtpToken>,
-    private readonly logger = new Logger(OtpTokenPresentationService.name),
-  ) {}
+  ) {
+    super();
+  }
 
   generateOTP(): string {
     const otp = Math.floor(1000 + Math.random() * 9000);

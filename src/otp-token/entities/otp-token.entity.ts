@@ -12,10 +12,13 @@ export enum OtpTokenType {
 export class OtpToken extends BaseModelEntity {
   @Column()
   token: string;
+
   @Column()
   expiresAt: Date;
-  @Column()
+
+  @Column({ nullable: true, default: null })
   isDeactivated: boolean;
+
   @Column({ type: 'enum', enum: OtpTokenType })
   type: OtpTokenType;
 

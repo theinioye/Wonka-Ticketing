@@ -12,5 +12,5 @@ export const pgconfig: PostgresConnectionOptions = {
     'dist/**/entities/**/*.entity{.ts,.js}',
   ],
 
-  synchronize: true,
+  synchronize: false,
 };

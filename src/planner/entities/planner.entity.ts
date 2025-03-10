@@ -15,10 +15,14 @@ export class Planner extends BaseModelEntity {
   password: string;
 
   @Column({ nullable: true, default: null })
+  phoneNumber: string;
+
+  @Column({ nullable: true, default: null })
   profileImageUrl: string;
 
   @Column({ nullable: true, default: null })
   hasActivatedEmail: boolean;
+
   @Column({ nullable: true, default: null })
   lastLogInDate: Date;
 
