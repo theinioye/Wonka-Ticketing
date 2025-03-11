@@ -34,13 +34,15 @@ export class UserPresentationService {
       password: hashedPassword,
       ...rest,
     });
-    const token = (
-      await this.otpService.createOtpToken(OtpTokenType.EMAIL, user)
-    ).token;
-    await this.mailService.sendConfirmationEmail({
-      user,
-      token,
-    });
+    // const token =
+
+    await this.otpService.createOtpToken(OtpTokenType.EMAIL, user);
+
+    await this.mailService.sendTestEmail();
+    // await this.mailService.sendConfirmationEmail({
+    //   user: user,
+    //   token,
+    // });
 
     return this.repo.save(user);
   }
