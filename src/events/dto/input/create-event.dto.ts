@@ -24,13 +24,18 @@ export class CreateEventDto {
   @IsArray()
   @ValidateNested({ each: true })
   @Type(() => CreateCategoryDto)
-  category: CreateCategoryDto[];
+  categories: CreateCategoryDto[];
 
   @IsString()
   googleMapUrl: string;
 
   @IsString()
   maximumCapacity: string;
+
+  @IsOptional()
+  @IsArray()
+  @IsString({ each: true })
+  coPlanners: string[];
 }
 
 export class CreateCategoryDto {

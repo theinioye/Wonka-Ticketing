@@ -1,4 +1,4 @@
-import { BaseModelEntity } from '@/common/entities/base-model.entity';
+import { BaseModelEntity } from '../../common/entities/base-model.entity';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 import { Tickets } from './tickets.entity';
 import { Events } from './events.entity';
@@ -17,6 +17,6 @@ export class Category extends BaseModelEntity {
   @OneToMany(() => Tickets, (ticket) => ticket.category)
   tickets: Tickets[];
 
-  @ManyToOne(() => Events, (event) => event.categories, { cascade: true })
+  @ManyToOne(() => Events, (event) => event.categories)
   event: Events;
 }

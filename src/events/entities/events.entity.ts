@@ -1,17 +1,11 @@
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  OneToMany,
-} from 'typeorm';
-import { Tickets } from './tickets.entity';
-import { Planner } from '@/planner/entities/planner.entity';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
+import { Planner } from '../../planner/entities/planner.entity';
 import { Category } from './categories.entity';
+import { Tickets } from './tickets.entity';
+import { BaseModelEntity } from '../../common/entities/base-model.entity';
 
 @Entity()
-export class Events extends BaseEntity {
+export class Events extends BaseModelEntity {
   @Column()
   name: string;
 
@@ -31,7 +25,7 @@ export class Events extends BaseEntity {
   isOngoing: boolean;
 
   @Column({ nullable: true, default: null })
-  maximumCapacity: number;
+  maximumCapacity: string;
 
   @OneToMany(() => Tickets, (ticket) => ticket.event, { cascade: true })
   tickets: Tickets[];
