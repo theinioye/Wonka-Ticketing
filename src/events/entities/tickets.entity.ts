@@ -1,5 +1,6 @@
 import { BaseEntity, Column, Entity, ManyToOne } from 'typeorm';
 import { Events } from './events.entity';
+import { Category as Category } from './categories.entity';
 
 @Entity()
 export class Tickets extends BaseEntity {
@@ -11,4 +12,9 @@ export class Tickets extends BaseEntity {
 
   @ManyToOne(() => Events, (event) => event.tickets, { cascade: true })
   event: Events;
+
+  @ManyToOne(() => Category, (category) => category.tickets, {
+    cascade: true,
+  })
+  category: Category;
 }

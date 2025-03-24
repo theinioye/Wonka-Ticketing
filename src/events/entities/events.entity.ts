@@ -8,6 +8,7 @@ import {
 } from 'typeorm';
 import { Tickets } from './tickets.entity';
 import { Planner } from '@/planner/entities/planner.entity';
+import { Category } from './categories.entity';
 
 @Entity()
 export class Events extends BaseEntity {
@@ -35,4 +36,7 @@ export class Events extends BaseEntity {
   @JoinTable()
   @ManyToMany(() => Planner, (planner) => planner.events)
   planners: Planner[];
+
+  @OneToMany(() => Category, (category) => category.event, { cascade: true })
+  categories: Category[];
 }
