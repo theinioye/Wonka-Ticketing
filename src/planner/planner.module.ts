@@ -6,7 +6,7 @@ import { PlannerPresentationService } from './presentation-services.ts/planner.p
 import { UserModule } from '@/user/user.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Planner]), PlannerModule, UserModule],
+  imports: [TypeOrmModule.forFeature([Planner]), UserModule],
   controllers: [PlannerSignUpController],
   providers: [PlannerPresentationService],
   exports: [PlannerPresentationService],

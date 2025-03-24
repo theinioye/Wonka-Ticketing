@@ -4,10 +4,10 @@ export class CreateUserDto {
   @IsEmail()
   email: string;
 
-  @MinLength(5)
+  @MinLength(4)
   firstName: string;
 
-  @MinLength(5)
+  @MinLength(4)
   lastName: string;
 
   @MinLength(7)
