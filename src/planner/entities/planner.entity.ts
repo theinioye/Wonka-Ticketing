@@ -1,7 +1,8 @@
+import { Events } from '@/events/entities/events.entity';
 import { BaseModelEntity } from '../../common/entities/base-model.entity';
 import { compareHash } from '../../common/utils/utils';
 import { OtpToken } from '../../otp-token/entities/otp-token.entity';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToMany, OneToMany } from 'typeorm';
 
 @Entity()
 export class Planner extends BaseModelEntity {
@@ -29,8 +30,8 @@ export class Planner extends BaseModelEntity {
   @OneToMany(() => OtpToken, (token) => token.user)
   otpTokens: OtpToken[];
 
-  //   TO-DO:Add Ticket relation
-  // TO-DO:Add event relation
+  @ManyToMany(() => Events, (event) => event.planners)
+  events: Events[];
 
   async verifyPassword(password: string): Promise<boolean> {
     return compareHash(password, this.password);
