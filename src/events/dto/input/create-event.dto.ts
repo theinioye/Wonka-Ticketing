@@ -1,7 +1,7 @@
 import { Type } from 'class-transformer';
 import {
   IsArray,
-  IsDate,
+  IsDateString,
   IsOptional,
   IsString,
   ValidateNested,
@@ -9,16 +9,16 @@ import {
 
 export class CreateEventDto {
   @IsString()
-  title: string;
+  name: string;
 
   @IsString()
   description: string;
 
-  @IsDate()
+  @IsDateString()
   startDate: Date;
 
   @IsOptional()
-  @IsDate()
+  @IsDateString()
   endDate: Date;
 
   @IsArray()
@@ -26,9 +26,11 @@ export class CreateEventDto {
   @Type(() => CreateCategoryDto)
   categories: CreateCategoryDto[];
 
+  @IsOptional()
   @IsString()
   googleMapUrl: string;
 
+  @IsOptional()
   @IsString()
   maximumCapacity: string;
 

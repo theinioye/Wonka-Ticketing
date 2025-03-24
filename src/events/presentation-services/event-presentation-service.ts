@@ -7,9 +7,7 @@ import { In, Repository } from 'typeorm';
 import { Category } from '../entities/categories.entity';
 import { CreateEventDto } from '../dto/input/create-event.dto';
 
-type createEvent = CreateEventDto & {
-  userId: string;
-};
+type createEvent = { CreateEventDto: CreateEventDto; userId: string };
 @Injectable()
 export class EventPresentationService extends BaseService {
   constructor(
@@ -23,7 +21,8 @@ export class EventPresentationService extends BaseService {
   }
 
   async createEvent(data: createEvent) {
-    const { userId, categories, coPlanners, ...rest } = data;
+    const { userId, CreateEventDto } = data;
+    const { categories, coPlanners, ...rest } = CreateEventDto;
     const planner = await this.plannerService.db.findOneBy({
       id: userId,
     });

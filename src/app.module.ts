@@ -11,6 +11,7 @@ import { CommonModule } from './common/common.module';
 import { AuthModule } from './auth/auth.module';
 import { APP_GUARD } from '@nestjs/core';
 import { AccessTokenGuard } from './auth/guards/access-token.guards';
+import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
@@ -21,6 +22,7 @@ import { AccessTokenGuard } from './auth/guards/access-token.guards';
     UserModule,
     PlannerModule,
     CommonModule,
+    EventsModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_GUARD, useClass: AccessTokenGuard }],

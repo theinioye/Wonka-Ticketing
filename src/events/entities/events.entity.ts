@@ -12,13 +12,13 @@ export class Events extends BaseModelEntity {
   @Column()
   description: string;
 
-  @Column({ nullable: true, default: null })
+  @Column({ nullable: true, default: null, type: 'timestamp' })
   startDate: Date;
 
   @Column({ nullable: true, default: null })
   googleMapUrl: string;
 
-  @Column({ nullable: true, default: null })
+  @Column({ nullable: true, default: null, type: 'timestamp' })
   EndDate: Date;
 
   @Column({ default: false })
