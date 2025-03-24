@@ -1,16 +1,17 @@
-import { BaseEntity, Column, Entity, ManyToOne } from 'typeorm';
+import { BaseModelEntity } from '../../common/entities/base-model.entity';
+import { Column, Entity, ManyToOne } from 'typeorm';
+import { Category } from './categories.entity';
 import { Events } from './events.entity';
-import { Category as Category } from './categories.entity';
 
 @Entity()
-export class Tickets extends BaseEntity {
+export class Tickets extends BaseModelEntity {
   @Column({ default: false })
   isCheckedIn: boolean;
 
   @Column({ nullable: true })
   qrcodeurl: string;
 
-  @ManyToOne(() => Events, (event) => event.tickets, { cascade: true })
+  @ManyToOne(() => Events, (event) => event.tickets)
   event: Events;
 
   @ManyToOne(() => Category, (category) => category.tickets, {

@@ -1,34 +1,31 @@
-import {
-  BaseEntity,
-  Column,
-  Entity,
-  JoinTable,
-  ManyToMany,
-  OneToMany,
-} from 'typeorm';
-import { Tickets } from './tickets.entity';
-import { Planner } from '@/planner/entities/planner.entity';
+import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
+import { Planner } from '../../planner/entities/planner.entity';
 import { Category } from './categories.entity';
+import { Tickets } from './tickets.entity';
+import { BaseModelEntity } from '../../common/entities/base-model.entity';
 
 @Entity()
-export class Events extends BaseEntity {
+export class Events extends BaseModelEntity {
   @Column()
   name: string;
 
   @Column()
   description: string;
 
-  @Column()
+  @Column({ nullable: true, default: null, type: 'timestamp' })
   startDate: Date;
 
-  @Column()
-  location: string;
+  @Column({ nullable: true, default: null })
+  googleMapUrl: string;
 
-  @Column()
+  @Column({ nullable: true, default: null, type: 'timestamp' })
   EndDate: Date;
 
-  @Column()
+  @Column({ default: false })
   isOngoing: boolean;
+
+  @Column({ nullable: true, default: null })
+  maximumCapacity: string;
 
   @OneToMany(() => Tickets, (ticket) => ticket.event, { cascade: true })
   tickets: Tickets[];

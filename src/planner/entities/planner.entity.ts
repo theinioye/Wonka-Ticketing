@@ -1,4 +1,4 @@
-import { Events } from '@/events/entities/events.entity';
+import { Events } from '../../events/entities/events.entity';
 import { BaseModelEntity } from '../../common/entities/base-model.entity';
 import { compareHash } from '../../common/utils/utils';
 import { OtpToken } from '../../otp-token/entities/otp-token.entity';
