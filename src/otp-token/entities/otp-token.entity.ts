@@ -8,24 +8,29 @@ export enum OtpTokenType {
   PASSWORD_RESET = 'password-reset',
 }
 
-@Entity()
+@Entity('otp_tokens')
 export class OtpToken extends BaseModelEntity {
   @Column()
   token: string;
+
   @Column()
   expiresAt: Date;
-  @Column()
+
+  @Column({ default: false })
   isDeactivated: boolean;
+
   @Column({ type: 'enum', enum: OtpTokenType })
   type: OtpTokenType;
 
-  @ManyToOne(() => User, (user) => user.otpTokens, { onDelete: 'CASCADE' })
+  @ManyToOne(() => User, (user) => user.otpTokens, {
+    onDelete: 'CASCADE',
+  })
   user: User;
 
   @ManyToOne(() => Planner, (planner) => planner.otpTokens, {
     onDelete: 'CASCADE',
   })
-  member: Planner;
+  planner: Planner;
 
   public hasExpired(): boolean {
     return (

@@ -12,6 +12,9 @@ export class User extends BaseModelEntity {
   lastName: string;
 
   @Column({ nullable: true, default: null })
+  phoneNumber: string;
+
+  @Column({ nullable: true, default: null })
   lastLogInDate: Date;
 
   @Column({ nullable: true, default: null })
@@ -19,6 +22,7 @@ export class User extends BaseModelEntity {
 
   @Column({ nullable: true, default: null })
   hasActivatedEmail: boolean;
+
   @Column()
   email: string;
 

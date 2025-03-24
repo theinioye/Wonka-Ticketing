@@ -16,7 +16,7 @@ export const config = {
     'src/**/*.entity{.ts,.js}',
     'src/**/entities/**/*.entity{.ts,.js}',
   ],
-  migrations: ['dist/migrations/*{.ts,.js}'],
+  migrations: ['src/migrations/*{.ts,.js}'],
   autoLoadEntities: true,
   synchronize: false,
 };
