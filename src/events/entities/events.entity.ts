@@ -18,17 +18,20 @@ export class Events extends BaseEntity {
   @Column()
   description: string;
 
-  @Column()
+  @Column({ nullable: true, default: null })
   startDate: Date;
 
-  @Column()
-  location: string;
+  @Column({ nullable: true, default: null })
+  googleMapUrl: string;
 
-  @Column()
+  @Column({ nullable: true, default: null })
   EndDate: Date;
 
-  @Column()
+  @Column({ default: false })
   isOngoing: boolean;
+
+  @Column({ nullable: true, default: null })
+  maximumCapacity: number;
 
   @OneToMany(() => Tickets, (ticket) => ticket.event, { cascade: true })
   tickets: Tickets[];
