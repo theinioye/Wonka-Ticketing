@@ -9,6 +9,8 @@ import { UserModule } from './user/user.module';
 import { OTPModule } from './otp-token/otp-token.module';
 import { CommonModule } from './common/common.module';
 import { AuthModule } from './auth/auth.module';
+import { APP_GUARD } from '@nestjs/core';
+import { AccessTokenGuard } from './auth/guards/access-token.guards';
 
 @Module({
   imports: [
@@ -21,6 +23,6 @@ import { AuthModule } from './auth/auth.module';
     CommonModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, { provide: APP_GUARD, useClass: AccessTokenGuard }],
 })
 export class AppModule {}
