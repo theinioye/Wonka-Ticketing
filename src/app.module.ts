@@ -1,17 +1,18 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { AuthModule } from './auth/auth.module';
+import { AccessTokenGuard } from './auth/guards/access-token.guards';
+import { CommonModule } from './common/common.module';
 import { pgconfig } from './dbConfig';
+import { EventsModule } from './events/events.module';
+import { OTPModule } from './otp-token/otp-token.module';
+import { PaymentsModule } from './Payments/payment.module';
 import { PlannerModule } from './planner/planner.module';
 import { UserModule } from './user/user.module';
-import { OTPModule } from './otp-token/otp-token.module';
-import { CommonModule } from './common/common.module';
-import { AuthModule } from './auth/auth.module';
-import { APP_GUARD } from '@nestjs/core';
-import { AccessTokenGuard } from './auth/guards/access-token.guards';
-import { EventsModule } from './events/events.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { EventsModule } from './events/events.module';
     PlannerModule,
     CommonModule,
     EventsModule,
+    PaymentsModule,
   ],
   controllers: [AppController],
   providers: [AppService, { provide: APP_GUARD, useClass: AccessTokenGuard }],

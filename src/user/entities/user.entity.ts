@@ -1,7 +1,9 @@
+import { Payments } from '../../Payments/entities/payment.entity';
 import { BaseModelEntity } from '../../common/entities/base-model.entity';
 import { compareHash } from '../../common/utils/utils';
 import { OtpToken } from '../../otp-token/entities/otp-token.entity';
 import { Column, Entity, OneToMany } from 'typeorm';
+import { Tickets } from '../../events/entities/tickets.entity';
 
 @Entity()
 export class User extends BaseModelEntity {
@@ -31,6 +33,12 @@ export class User extends BaseModelEntity {
 
   @OneToMany(() => OtpToken, (token) => token.user)
   otpTokens: OtpToken[];
+
+  @OneToMany(() => Payments, (payment) => payment.user)
+  payments: Payments[];
+
+  @OneToMany(() => Tickets, (ticket) => ticket.user)
+  tickets: Tickets[];
 
   async verifyPassword(password: string): Promise<boolean> {
     return compareHash(password, this.password);

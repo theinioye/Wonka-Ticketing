@@ -2,12 +2,12 @@ import { BaseService } from '@/common/service/base.service';
 import { PlannerPresentationService } from '@/planner/presentation-services.ts/planner.presentation-service';
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Events } from '../entities/events.entity';
-import { ILike, In, Repository } from 'typeorm';
-import { Category } from '../entities/categories.entity';
+import { In, Repository } from 'typeorm';
 import { CreateEventDto } from '../dto/input/create-event.dto';
-import { EventResponseDto } from '../dto/response/event-response.dto';
 import { SearchEventDto } from '../dto/input/search-event.dto';
+import { EventResponseDto } from '../dto/response/event-response.dto';
+import { Category } from '../entities/categories.entity';
+import { Events } from '../entities/events.entity';
 
 type createEvent = { CreateEventDto: CreateEventDto; userId: string };
 @Injectable()
@@ -73,20 +73,35 @@ export class EventPresentationService extends BaseService {
     return events as EventResponseDto[];
   }
 
-  async searchEvents(query: SearchEventDto) {
+  async searchEvents(query: SearchEventDto): Promise<EventResponseDto[]> {
     const { searchTerm } = query;
-    const events = await this.eventRepo.find({
-      where: [
-        { name: ILike(`%${searchTerm}`) },
-        { description: ILike(`%${searchTerm}`) },
-        {
-          planners: {
-            name: ILike(`%${searchTerm}`),
-          },
-        },
-      ],
-      relations: [`planners`],
-    });
-    return events as EventResponseDto[];
+
+    const events = await this.eventRepo
+      .createQueryBuilder('event')
+      .leftJoinAndSelect('event.planners', 'planner')
+      .where('LOWER(event.name) LIKE LOWER(:query)', {
+        query: `%${searchTerm}%`,
+      })
+      .orWhere('LOWER(event.description) LIKE LOWER(:query)', {
+        query: `%${searchTerm}%`,
+      })
+      .orWhere('LOWER(planner.name) LIKE LOWER(:query)', {
+        query: `%${searchTerm}%`,
+      })
+      .getMany();
+    console.log(events[0]);
+
+    return events.map((event) => ({
+      id: event.id,
+      name: event.name,
+      description: event.description,
+      googleMapUrl: event.googleMapUrl,
+      startDate: event.startDate,
+      planners:
+        event.planners?.map((planner) => ({
+          id: planner.id,
+          name: planner.name,
+        })) || [],
+    }));
   }
 }
