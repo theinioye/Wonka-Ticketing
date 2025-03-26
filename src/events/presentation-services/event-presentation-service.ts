@@ -3,9 +3,11 @@ import { PlannerPresentationService } from '@/planner/presentation-services.ts/p
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Events } from '../entities/events.entity';
-import { In, Repository } from 'typeorm';
+import { ILike, In, Repository } from 'typeorm';
 import { Category } from '../entities/categories.entity';
 import { CreateEventDto } from '../dto/input/create-event.dto';
+import { EventResponseDto } from '../dto/response/event-response.dto';
+import { SearchEventDto } from '../dto/input/search-event.dto';
 
 type createEvent = { CreateEventDto: CreateEventDto; userId: string };
 @Injectable()
@@ -30,6 +32,12 @@ export class EventPresentationService extends BaseService {
       throw new NotFoundException('Planner not found');
     }
 
+    const event = await this.eventRepo.create({
+      ...rest,
+
+      planners: [planner],
+    });
+
     const categoriesData = categories.map((data) => {
       const category = new Category();
       category.name = data.name;
@@ -40,11 +48,8 @@ export class EventPresentationService extends BaseService {
 
     const eventCategories = await this.categoryRepo.save(categoriesData);
 
-    const event = await this.eventRepo.create({
-      ...rest,
-      categories: eventCategories,
-      planners: [planner],
-    });
+    event.categories = eventCategories;
+
     await this.eventRepo.save(event);
 
     if (coPlanners) {
@@ -61,5 +66,27 @@ export class EventPresentationService extends BaseService {
       await this.eventRepo.save(event);
     }
     return event;
+  }
+
+  async viewAllEvents() {
+    const events = await this.eventRepo.find();
+    return events as EventResponseDto[];
+  }
+
+  async searchEvents(query: SearchEventDto) {
+    const { searchTerm } = query;
+    const events = await this.eventRepo.find({
+      where: [
+        { name: ILike(`%${searchTerm}`) },
+        { description: ILike(`%${searchTerm}`) },
+        {
+          planners: {
+            name: ILike(`%${searchTerm}`),
+          },
+        },
+      ],
+      relations: [`planners`],
+    });
+    return events as EventResponseDto[];
   }
 }
