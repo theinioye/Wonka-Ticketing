@@ -14,11 +14,10 @@ import { UserPresentationService } from '@/user/presentation-services/user.prese
 export class PaymentsPresentationService extends BaseService {
   private readonly PAYSTACK_SECRET = process.env.PAYSTACK_SECRET_KEY;
   private readonly PAYSTACK_BASE_URL = 'https://api.paystack.co';
-  private readonly userService: UserPresentationService;
-
   constructor(
     @InjectRepository(Payments)
     private readonly paymentRepo: Repository<Payments>,
+    private readonly userService: UserPresentationService,
   ) {
     super();
   }
@@ -44,13 +43,17 @@ export class PaymentsPresentationService extends BaseService {
         },
       },
     );
+    const user = await this.userService.db.findOneBy({ id: userId });
+    if (!user) {
+      throw new Error('User not found');
+    }
 
     const payment = this.paymentRepo.create({
       reference: response.data.data.reference,
       amount,
       status: 'pending',
       email,
-      user: { id: userId },
+      user,
     });
     await this.paymentRepo.save(payment);
 
