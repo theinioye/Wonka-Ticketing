@@ -4,16 +4,17 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as axios from 'axios';
 import { Repository } from 'typeorm';
 import { Payments } from '../entities/payment.entity';
+import { PaystackResponseDto } from '../dtos/response/paystack-response.dto';
 
-interface PaystackResponse {
-  status: boolean;
-  message: string;
-  data: {
-    authorization_url: string;
-    access_code: string;
-    reference: string;
-  };
-}
+// interface PaystackResponse {
+//   status: boolean;
+//   message: string;
+//   data: {
+//     authorization_url: string;
+//     access_code: string;
+//     reference: string;
+//   };
+// }
 @Injectable()
 export class PaymentsPresentationService extends BaseService {
   private readonly PAYSTACK_SECRET = process.env.PAYSTACK_SECRET_KEY;
@@ -32,7 +33,7 @@ export class PaymentsPresentationService extends BaseService {
     userId: string,
     callbackUrl: string,
   ) {
-    const response = await axios.post<PaystackResponse>(
+    const response = await axios.post<PaystackResponseDto>(
       `${this.PAYSTACK_BASE_URL}/transaction/initialize`,
       {
         email,
@@ -61,7 +62,7 @@ export class PaymentsPresentationService extends BaseService {
   }
 
   async verifyPayment(reference: string) {
-    const response = await axios.get<PaystackResponse>(
+    const response = await axios.get<PaystackResponseDto>(
       `${this.PAYSTACK_BASE_URL}/transaction/verify/${reference}`,
       {
         headers: { Authorization: `Bearer ${this.PAYSTACK_SECRET}` },
