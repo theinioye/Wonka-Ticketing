@@ -4,21 +4,17 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as axios from 'axios';
 import { Repository } from 'typeorm';
 import { Payments } from '../entities/payment.entity';
-import { PaystackResponseDto } from '../dtos/response/paystack-response.dto';
+import {
+  PaystackResponseDto,
+  PaystackVerificationResponse,
+} from '../dtos/response/paystack-response.dto';
+import { UserPresentationService } from '@/user/presentation-services/user.presentation-service';
 
-// interface PaystackResponse {
-//   status: boolean;
-//   message: string;
-//   data: {
-//     authorization_url: string;
-//     access_code: string;
-//     reference: string;
-//   };
-// }
 @Injectable()
 export class PaymentsPresentationService extends BaseService {
   private readonly PAYSTACK_SECRET = process.env.PAYSTACK_SECRET_KEY;
   private readonly PAYSTACK_BASE_URL = 'https://api.paystack.co';
+  private readonly userService: UserPresentationService;
 
   constructor(
     @InjectRepository(Payments)
@@ -61,25 +57,35 @@ export class PaymentsPresentationService extends BaseService {
     return response.data;
   }
 
+  isValidPaystackResponse(
+    response: any,
+  ): response is PaystackVerificationResponse {
+    return (
+      response &&
+      typeof response === 'object' &&
+      response.data?.status !== undefined
+    );
+  }
+
   async verifyPayment(reference: string) {
-    const response = await axios.get<PaystackResponseDto>(
+    const response = await axios.get(
       `${this.PAYSTACK_BASE_URL}/transaction/verify/${reference}`,
       {
         headers: { Authorization: `Bearer ${this.PAYSTACK_SECRET}` },
       },
     );
+    if (this.isValidPaystackResponse(response.data)) {
+      const payment = await this.paymentRepo.findOne({ where: { reference } });
 
-    const payment = await this.paymentRepo.findOne({ where: { reference } });
+      if (payment) {
+        response.data.data.status = payment.status;
 
-    if (payment) {
-      if (response.data.status) {
-        payment.status = 'success';
-      } else {
-        payment.status = 'failed';
+        await this.paymentRepo.save(payment);
       }
-      await this.paymentRepo.save(payment);
-    }
 
-    return response.data;
+      return response.data;
+    } else {
+      throw new Error('Invalid Paystack response structure');
+    }
   }
 }
