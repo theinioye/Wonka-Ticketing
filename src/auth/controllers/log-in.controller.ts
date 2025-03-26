@@ -7,7 +7,7 @@ import { Public } from '../decorators/public.decorators';
 @Controller('login')
 export class LogInController {
   constructor(private authService: AuthPresentationService) {}
-
+  @Public()
   @Post('/user')
   async userLogIn(@Body() data: UserSignInDto) {
     return this.authService.userLogIn(data);

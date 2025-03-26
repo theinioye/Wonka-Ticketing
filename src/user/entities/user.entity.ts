@@ -1,4 +1,4 @@
-import { Payments } from '../../Payments/entities/payment.entity';
+import { Payments } from '../../payments/entities/payment.entity';
 import { BaseModelEntity } from '../../common/entities/base-model.entity';
 import { compareHash } from '../../common/utils/utils';
 import { OtpToken } from '../../otp-token/entities/otp-token.entity';

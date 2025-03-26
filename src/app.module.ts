@@ -10,7 +10,7 @@ import { CommonModule } from './common/common.module';
 import { pgconfig } from './dbConfig';
 import { EventsModule } from './events/events.module';
 import { OTPModule } from './otp-token/otp-token.module';
-import { PaymentsModule } from './Payments/payment.module';
+import { PaymentsModule } from './payments/payment.module';
 import { PlannerModule } from './planner/planner.module';
 import { UserModule } from './user/user.module';
 
