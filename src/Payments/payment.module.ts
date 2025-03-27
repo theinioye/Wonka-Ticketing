@@ -9,6 +9,6 @@ import { PaymentsPresentationService } from './presentation-services/payment-pre
   imports: [TypeOrmModule.forFeature([Payments]), UserModule],
   providers: [PaymentsPresentationService],
   controllers: [PaymentsController],
-  exports: [],
+  exports: [PaymentsPresentationService],
 })
 export class PaymentsModule {}
