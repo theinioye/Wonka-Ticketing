@@ -7,6 +7,7 @@ import { Tickets } from '../entities/tickets.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateTicketDto } from '../dto/input/create-ticket.dto';
 import { UserPresentationService } from '@/user/presentation-services/user.presentation-service';
+import { InitializeTicketResponseDto } from '../dto/response/ticket-response.dto';
 
 @Injectable()
 export class TicketPresentationService extends BaseService {
@@ -41,7 +42,7 @@ export class TicketPresentationService extends BaseService {
     const email = checkUser.email;
     const callbackUrl = 'URL_ADDRESS:3000/payments/verify';
 
-    await this.paymentService.initializePayment(
+    const paymentResponse = await this.paymentService.initializePayment(
       email,
       amount,
       checkUser.id,
@@ -50,6 +51,7 @@ export class TicketPresentationService extends BaseService {
 
     return {
       message: `Payment of amount:${amount} initialized successfully`,
-    };
+      ...paymentResponse,
+    } as InitializeTicketResponseDto;
   }
 }
