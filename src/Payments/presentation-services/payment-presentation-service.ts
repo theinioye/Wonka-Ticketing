@@ -9,6 +9,7 @@ import {
   PaystackVerificationResponse,
 } from '../dtos/response/paystack-response.dto';
 import { UserPresentationService } from '@/user/presentation-services/user.presentation-service';
+import { InitializePaymentDto } from '../dtos/input/payment-input.dto';
 
 @Injectable()
 export class PaymentsPresentationService extends BaseService {
@@ -22,18 +23,14 @@ export class PaymentsPresentationService extends BaseService {
     super();
   }
 
-  async initializePayment(
-    email: string,
-    amount: number,
-    userId: string,
-    callbackUrl: string,
-  ) {
+  async initializePayment(data: InitializePaymentDto) {
+    const { amount, email, callBackUrl, userId, ...rest } = data;
     const response = await axios.post<PaystackResponseDto>(
       `${this.PAYSTACK_BASE_URL}/transaction/initialize`,
       {
         email,
         amount: amount * 100, // Convert to kobo
-        callback_url: callbackUrl,
+        callback_url: callBackUrl,
         currency: 'NGN',
       },
       {
@@ -54,6 +51,7 @@ export class PaymentsPresentationService extends BaseService {
       status: 'pending',
       email,
       user,
+      ...rest,
     });
     await this.paymentRepo.save(payment);
 

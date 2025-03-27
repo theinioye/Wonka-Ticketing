@@ -1,12 +1,12 @@
-import { BaseService } from '@/common/service/base.service';
-import { PaymentsPresentationService } from '@/payments/presentation-services/payment-presentation-service';
+import { BaseService } from '../../common/service/base.service';
+import { PaymentsPresentationService } from '../../payments/presentation-services/payment-presentation-service';
 import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { EventPresentationService } from './event-presentation-service';
 import { Tickets } from '../entities/tickets.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateTicketDto } from '../dto/input/create-ticket.dto';
-import { UserPresentationService } from '@/user/presentation-services/user.presentation-service';
+import { UserPresentationService } from '../../user/presentation-services/user.presentation-service';
 import { InitializeTicketResponseDto } from '../dto/response/ticket-response.dto';
 
 @Injectable()
