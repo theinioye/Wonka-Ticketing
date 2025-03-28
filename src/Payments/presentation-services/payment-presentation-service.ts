@@ -23,8 +23,10 @@ export class PaymentsPresentationService extends BaseService {
     super();
   }
 
+  public db = this.paymentRepo;
+
   async initializePayment(data: InitializePaymentDto) {
-    const { amount, email, callBackUrl, userId, ...rest } = data;
+    const { amount, email, callBackUrl, userId, quantity, ...rest } = data;
     const response = await axios.post<PaystackResponseDto>(
       `${this.PAYSTACK_BASE_URL}/transaction/initialize`,
       {
@@ -51,7 +53,13 @@ export class PaymentsPresentationService extends BaseService {
       status: 'pending',
       email,
       user,
-      ...rest,
+      quantity,
+      category: {
+        id: rest.categoryId,
+      },
+      event: {
+        id: rest.eventId,
+      },
     });
     await this.paymentRepo.save(payment);
 
