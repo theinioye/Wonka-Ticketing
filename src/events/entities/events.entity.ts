@@ -1,8 +1,9 @@
+import { Payments } from '../../payments/entities/payment.entity';
 import { Column, Entity, JoinTable, ManyToMany, OneToMany } from 'typeorm';
+import { BaseModelEntity } from '../../common/entities/base-model.entity';
 import { Planner } from '../../planner/entities/planner.entity';
 import { Category } from './categories.entity';
 import { Tickets } from './tickets.entity';
-import { BaseModelEntity } from '../../common/entities/base-model.entity';
 
 @Entity()
 export class Events extends BaseModelEntity {
@@ -29,6 +30,9 @@ export class Events extends BaseModelEntity {
 
   @OneToMany(() => Tickets, (ticket) => ticket.event, { cascade: true })
   tickets: Tickets[];
+
+  @OneToMany(() => Payments, (payment) => payment.event, { cascade: true })
+  payments: Payments[];
 
   @JoinTable()
   @ManyToMany(() => Planner, (planner) => planner.events)

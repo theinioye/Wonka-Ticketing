@@ -21,7 +21,7 @@ export class EventPresentationService extends BaseService {
   ) {
     super();
   }
-
+  public db = this.eventRepo;
   async createEvent(data: createEvent) {
     const { userId, CreateEventDto } = data;
     const { categories, coPlanners, ...rest } = CreateEventDto;
