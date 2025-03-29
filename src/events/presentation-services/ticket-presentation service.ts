@@ -8,6 +8,7 @@ import { Tickets } from '../entities/tickets.entity';
 import { EventPresentationService } from './event-presentation-service';
 import { CreateTicketDto } from '../dto/input/create-ticket.dto';
 import { InitializeTicketResponseDto } from '../dto/response/ticket-response.dto';
+import { Utils } from '../utils/utils';
 
 @Injectable()
 export class TicketPresentationService extends BaseService {
@@ -17,6 +18,7 @@ export class TicketPresentationService extends BaseService {
     private readonly eventService: EventPresentationService,
     private readonly paymentService: PaymentsPresentationService,
     private readonly userService: UserPresentationService,
+    private readonly Utils: Utils,
   ) {
     super();
   }
@@ -111,6 +113,9 @@ export class TicketPresentationService extends BaseService {
         category: { id: category.id },
         user: { id: userId },
       });
+      const qrCodeUrl = await this.Utils.createQrcode(ticket.id);
+      ticket.qrcodeurl = qrCodeUrl.url;
+
       tickets.push(ticket);
     }
 
