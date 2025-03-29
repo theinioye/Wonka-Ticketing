@@ -1,25 +1,26 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { OtpTokenPresentationService } from 'src/otp-token/presentation-services/otp-token.presentation-service';
 import { PlannerPresentationService } from 'src/planner/presentation-services.ts/planner.presentation-service';
 import { UserPresentationService } from 'src/user/presentation-services/user.presentation-service';
 import { UserSignInDto } from '../dto/user-sign-in.dto';
 // import { comparehash } from 'src/common/utils';
+import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
+import { Planner } from 'src/planner/entities/planner.entity';
 import { User } from 'src/user/entities/user.entity';
 import {
   PlannerAuthSignInResponse,
   UserAuthSignInResponse,
 } from '../dto/auth-response.dto';
 import { PlannerSignInDto } from '../dto/planner-sign-in.dto';
-import { Planner } from 'src/planner/entities/planner.entity';
 
 @Injectable()
 export class AuthPresentationService {
   constructor(
     private userService: UserPresentationService,
     private plannerService: PlannerPresentationService,
-    private tokenService: OtpTokenPresentationService,
+
     private jwtService: JwtService,
+    private configService: ConfigService,
   ) {}
 
   async userLogIn(data: UserSignInDto) {
@@ -112,13 +113,13 @@ export class AuthPresentationService {
     email: string;
   }): Promise<{ accessToken: string; refreshToken: string }> {
     const accessToken = await this.jwtService.signAsync(payload, {
-      secret: process.env.ACCESS_TOKEN_SECRET,
-      expiresIn: process.env.ACCESS_TOKEN_EXPIRES_AT,
+      secret: this.configService.get('ACCESS_TOKEN_SECRET'),
+      expiresIn: this.configService.get('ACCESS_TOKEN_EXPIRES_AT'),
     });
 
     const refreshToken = await this.jwtService.signAsync(payload, {
-      secret: process.env.REFRESH_TOKEN_SECRET,
-      expiresIn: process.env.REFRESH_TOKEN_EXPIRES_AT,
+      secret: this.configService.get('REFRESH_TOKEN_SECRET'),
+      expiresIn: this.configService.get('REFRESH_TOKEN_EXPIRES_AT'),
     });
 
     return {
