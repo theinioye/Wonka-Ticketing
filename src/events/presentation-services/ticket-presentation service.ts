@@ -70,6 +70,7 @@ export class TicketPresentationService extends BaseService {
       return {
         message: 'Payment failed',
         reference,
+        verifification,
       };
     }
     const payment = await this.paymentService.db.findOne({
@@ -77,7 +78,7 @@ export class TicketPresentationService extends BaseService {
       relations: ['user', 'event', 'category'],
     });
 
-    if (data.amount !== payment.amount * 10) {
+    if (data.amount !== payment.amount * 100) {
       return {
         message: 'Payment failed: Inaccurate amount',
         verifification,
@@ -115,6 +116,6 @@ export class TicketPresentationService extends BaseService {
 
     await this.repo.save(tickets);
 
-    return tickets;
+    return { tickets, verifification };
   }
 }

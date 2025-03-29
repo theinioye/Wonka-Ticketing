@@ -87,7 +87,7 @@ export class PaymentsPresentationService extends BaseService {
       const payment = await this.paymentRepo.findOne({ where: { reference } });
 
       if (payment) {
-        response.data.data.status = payment.status;
+        payment.status = response.data.data.status;
 
         await this.paymentRepo.save(payment);
       }
