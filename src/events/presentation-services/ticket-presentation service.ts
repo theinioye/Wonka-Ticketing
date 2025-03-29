@@ -4,10 +4,11 @@ import { Repository } from 'typeorm';
 import { BaseService } from '../../common/service/base.service';
 import { PaymentsPresentationService } from '../../payments/presentation-services/payment-presentation-service';
 import { UserPresentationService } from '../../user/presentation-services/user.presentation-service';
-import { Tickets } from '../entities/tickets.entity';
-import { EventPresentationService } from './event-presentation-service';
 import { CreateTicketDto } from '../dto/input/create-ticket.dto';
 import { InitializeTicketResponseDto } from '../dto/response/ticket-response.dto';
+import { Tickets } from '../entities/tickets.entity';
+import { Utils } from '../utils/utils';
+import { EventPresentationService } from './event-presentation-service';
 
 @Injectable()
 export class TicketPresentationService extends BaseService {
@@ -17,6 +18,7 @@ export class TicketPresentationService extends BaseService {
     private readonly eventService: EventPresentationService,
     private readonly paymentService: PaymentsPresentationService,
     private readonly userService: UserPresentationService,
+    private readonly Utils: Utils,
   ) {
     super();
   }
@@ -70,6 +72,7 @@ export class TicketPresentationService extends BaseService {
       return {
         message: 'Payment failed',
         reference,
+        verifification,
       };
     }
     const payment = await this.paymentService.db.findOne({
@@ -77,7 +80,7 @@ export class TicketPresentationService extends BaseService {
       relations: ['user', 'event', 'category'],
     });
 
-    if (data.amount !== payment.amount * 10) {
+    if (data.amount !== payment.amount * 100) {
       return {
         message: 'Payment failed: Inaccurate amount',
         verifification,
@@ -110,11 +113,29 @@ export class TicketPresentationService extends BaseService {
         category: { id: category.id },
         user: { id: userId },
       });
+      const qrCodeUrl = await this.Utils.createQrcode(ticket.id);
+      ticket.qrcodeurl = qrCodeUrl.url;
+
       tickets.push(ticket);
     }
 
     await this.repo.save(tickets);
 
-    return tickets;
+    return { tickets, verifification };
+  }
+  async verifyticket(qrtext: string) {
+    const ticket = await this.repo.findOne({
+      where: { id: qrtext },
+    });
+    if (!ticket) {
+      return { message: 'Ticket does not exist' };
+    }
+    if (!ticket.isCheckedIn) {
+      ticket.isCheckedIn = true;
+      await this.repo.save(ticket);
+      return { message: 'Ticket checked in successfully' };
+    } else {
+      return { message: 'Ticket already checked in' };
+    }
   }
 }

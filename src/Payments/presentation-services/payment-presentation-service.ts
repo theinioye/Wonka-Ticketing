@@ -10,15 +10,15 @@ import {
 } from '../dtos/response/paystack-response.dto';
 import { UserPresentationService } from '@/user/presentation-services/user.presentation-service';
 import { InitializePaymentDto } from '../dtos/input/payment-input.dto';
+import { ConfigService } from '@nestjs/config';
 
 @Injectable()
 export class PaymentsPresentationService extends BaseService {
-  private readonly PAYSTACK_SECRET = process.env.PAYSTACK_SECRET_KEY;
-  private readonly PAYSTACK_BASE_URL = 'https://api.paystack.co';
   constructor(
     @InjectRepository(Payments)
     private readonly paymentRepo: Repository<Payments>,
     private readonly userService: UserPresentationService,
+    private readonly configService: ConfigService,
   ) {
     super();
   }
@@ -28,7 +28,7 @@ export class PaymentsPresentationService extends BaseService {
   async initializePayment(data: InitializePaymentDto) {
     const { amount, email, callBackUrl, userId, quantity, ...rest } = data;
     const response = await axios.post<PaystackResponseDto>(
-      `${this.PAYSTACK_BASE_URL}/transaction/initialize`,
+      `${this.configService.get('PAYSTACK_BASE_URL')}/transaction/initialize`,
       {
         email,
         amount: amount * 100, // Convert to kobo
@@ -37,7 +37,7 @@ export class PaymentsPresentationService extends BaseService {
       },
       {
         headers: {
-          Authorization: `Bearer ${this.PAYSTACK_SECRET}`,
+          Authorization: `Bearer ${this.configService.get('PAYSTACK_SECRET')}`,
           'Content-Type': 'application/json',
         },
       },
@@ -78,16 +78,18 @@ export class PaymentsPresentationService extends BaseService {
 
   async verifyPayment(reference: string) {
     const response = await axios.get(
-      `${this.PAYSTACK_BASE_URL}/transaction/verify/${reference}`,
+      `${this.configService.get('PAYSTACK_BASE_URL')}/transaction/verify/${reference}`,
       {
-        headers: { Authorization: `Bearer ${this.PAYSTACK_SECRET}` },
+        headers: {
+          Authorization: `Bearer ${this.configService.get('PAYSTACK_SECRET')}`,
+        },
       },
     );
     if (this.isValidPaystackResponse(response.data)) {
       const payment = await this.paymentRepo.findOne({ where: { reference } });
 
       if (payment) {
-        response.data.data.status = payment.status;
+        payment.status = response.data.data.status;
 
         await this.paymentRepo.save(payment);
       }
